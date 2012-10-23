@@ -14,20 +14,43 @@ module Fluent
           return ["200 OK", {'Content-type'=>'text/xml'}, CROSSDOMAIN_XML]unless tag.downcase.match("crossdomain.xml").nil?
 
           tag = @default_tag if tag == '' && @default_tag != ''
-          record = params
-          time = params['time']
-          time ||= params['t']
-          time = time[0..9].to_i  # just make sure that its 10 digits epoch time in seconds not miliseconds
-          if time == 0
-            time = Engine.now
+
+          i = 0
+
+          if js = params[i.to_s()]
+            while js = params[i.to_s()] do
+              record = JSON.parse(js)
+              time = params['time']
+              time = time.to_i
+              if time == 0
+                time = Engine.now
+              end
+
+              tag = record['action']
+
+              begin
+                Engine.emit(tag, time, record)
+              rescue
+                return ["500 Internal Server Error", {'Content-type'=>'text/plain'}, "500 Internal Server Error\n#{$!}\n"]
+              end
+              i = i + 1
+            end
+          else
+            record = params
+            time = params['time']
+            time ||= params['t']
+            time = time[0..9].to_i  # just make sure that its 10 digits epoch time in seconds not miliseconds
+            if time == 0
+              time = Engine.now
+            end
+            begin
+              Engine.emit(tag, time, record)
+            rescue
+              return ["500 Internal Server Error", {'Content-type'=>'text/plain'}, "500 Internal Server Error\n#{$!}\n"]
+            end
           end
         rescue
           return ["400 Bad Request", {'Content-type'=>'text/plain'}, "400 Bad Request\n#{$!}\n"]
-        end
-        begin
-          Engine.emit(tag, time, record)
-        rescue
-          return ["500 Internal Server Error", {'Content-type'=>'text/plain'}, "500 Internal Server Error\n#{$!}\n"]
         end
 
         if @respond_with_empty_img == true
