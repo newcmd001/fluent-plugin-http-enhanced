@@ -25,12 +25,14 @@ module Fluent
                 time = Engine.now
               end
 
-              tag = record['action']
+              if tag = record['action']
+                tag = "action." + record['action']
 
-              begin
-                Engine.emit(tag, time, record)
-              rescue
-                return ["500 Internal Server Error", {'Content-type'=>'text/plain'}, "500 Internal Server Error\n#{$!}\n"]
+                begin
+                  Engine.emit(tag, time, record)
+                rescue
+                  return ["500 Internal Server Error", {'Content-type'=>'text/plain'}, "500 Internal Server Error\n#{$!}\n"]
+                end
               end
               i = i + 1
             end
