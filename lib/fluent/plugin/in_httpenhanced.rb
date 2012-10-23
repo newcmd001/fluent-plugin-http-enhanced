@@ -37,19 +37,13 @@ module Fluent
               i = i + 1
             end
           else
-            $log.warn "1"
             record = params
-            $log.warn "2"
             time = params['time']
-            $log.warn "3"
             time ||= params['t']
-            $log.warn "4"
             time = time.to_i  # just make sure that its 10 digits epoch time in seconds not miliseconds
-            $log.warn "5"
             if time == 0
               time = Engine.now
             end
-            $log.warn "6"
             begin
               Engine.emit(tag, time, record)
             rescue
