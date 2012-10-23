@@ -44,7 +44,7 @@ module Fluent
             $log.warn "3"
             time ||= params['t']
             $log.warn "4"
-            time = time[0..9].to_i  # just make sure that its 10 digits epoch time in seconds not miliseconds
+            time = time.to_i  # just make sure that its 10 digits epoch time in seconds not miliseconds
             $log.warn "5"
             if time == 0
               time = Engine.now
