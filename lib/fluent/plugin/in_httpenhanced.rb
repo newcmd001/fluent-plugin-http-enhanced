@@ -15,9 +15,8 @@ module Fluent
 
           tag = @default_tag if tag == '' && @default_tag != ''
 
-          i = 0
-
-          if js = params[i.to_s()]
+          if tag == 'ios'
+            i = 0
             while js = params[i.to_s()] do
               record = JSON.parse(js)
               time = params['time']
