@@ -15,7 +15,7 @@ module Fluent
 
           tag = @default_tag if tag == '' && @default_tag != ''
 
-          if tag == 'ios'
+          if tag == 'batch'
             i = 0
             while js = params[i.to_s()] do
               record = JSON.parse(js)
