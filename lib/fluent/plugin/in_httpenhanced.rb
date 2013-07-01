@@ -26,7 +26,7 @@ module Fluent
               end
             
               # convert attributes string into JSON array
-              if record.has_key('attributes')
+              if record['attributes']
                 attributes = record['attributes']
                 attributes_json = attributes.gsub(/[{}:]/, '').split(',').map { |h| h1, h2 = h.split('='); {h1 => h2} }.reduce(:merge)
                 record['attributes'] = attributes_json
@@ -53,7 +53,7 @@ module Fluent
             end
             
             # convert attributes string into JSON array
-            if record.has_key('attributes')
+            if record['attributes']
               attributes = record['attributes']
               attributes_json = attributes.gsub(/[{}:]/, '').split(',').map { |h| h1, h2 = h.split('='); {h1 => h2} }.reduce(:merge)
               record['attributes'] = attributes_json
