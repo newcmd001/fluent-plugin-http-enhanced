@@ -26,9 +26,11 @@ module Fluent
               end
             
               # convert attributes string into JSON array
-              attributes = record['attributes']
-              attributes_json = attributes.gsub(/[{}:]/, '').split(',').map { |h| h1, h2 = h.split('='); {h1 => h2} }.reduce(:merge)
-              record['attributes'] = attributes_json
+              if 'attributes' in record
+                attributes = record['attributes']
+                attributes_json = attributes.gsub(/[{}:]/, '').split(',').map { |h| h1, h2 = h.split('='); {h1 => h2} }.reduce(:merge)
+                record['attributes'] = attributes_json
+              end
 
               if tag = record['action']
                 tag = "action." + record['action']
@@ -51,9 +53,11 @@ module Fluent
             end
             
             # convert attributes string into JSON array
-            attributes = record['attributes']
-            attributes_json = attributes.gsub(/[{}:]/, '').split(',').map { |h| h1, h2 = h.split('='); {h1 => h2} }.reduce(:merge)
-            record['attributes'] = attributes_json
+            if 'attributes' in record
+              attributes = record['attributes']
+              attributes_json = attributes.gsub(/[{}:]/, '').split(',').map { |h| h1, h2 = h.split('='); {h1 => h2} }.reduce(:merge)
+              record['attributes'] = attributes_json
+            end
 
             begin
               Engine.emit(tag, time, record)
